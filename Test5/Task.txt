@@ -1,0 +1,7 @@
+Problem #1: Write a script that searches ebay for all items for sale for $0.10 or less and outputs the item number, title and bid price for each of these items, where $0.10 is either a global variable or a command-line argument.
+
+Problem #2: Write a script that finds all results on craigslist for items located in either Los Angeles, Orange County or San Diego that contain the word 'herman miller' and are listed for $350 or less, where $350 is either a global variable or a command-line argument. The script should output links to each of the items found.
+
+Problem #3: Write a script to gets all search results from Google Images which contains the word 'aeron' in the image search. Fetch and save all images to a directory on the local filesystem. For simplicity, you can limit your script to only download the first 250 images listed in the search results from Google Images, though it is preferable that this limit is set as either a global variable or a command-line argument.
+
+Problem #4: Using Linux shell and not a programming language, write either a Linux shell script or a Linux 'one liner' that looks at every word in every file in the current directory and displays every word that is 5 characters or less. The output should be sorted from Z-A and should only contain one instance of each word even if it appeared more than once.

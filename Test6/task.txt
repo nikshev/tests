@@ -1,0 +1,12 @@
+Here you will find a small test we want you to solve and send back to us before Friday morning 08:00.
+You can use either PHP or Java to solve the test.
+ 
+You are interested in the historical hurricane information in Eastern North Pacific region.
+This information is provided by National Hurricane Center (http://www.nhc.noaa.gov/pastall.shtml#hurdat ).
+In hurdat2-nencpac-1949-2012-040513.txt you will find 6-hourly hurricane locations.
+Download this text file, then write small utility program to output the storm name and maximum sustained surface windspeed in kilometers per hour for each storm in 2009 season.
+Format description: http://www.nhc.noaa.gov/data/hurdat/hurdat2-format-nencpac.pdf
+Hurricane tracks file: http://www.nhc.noaa.gov/data/hurdat/hurdat2-nencpac-1949-2012-040513.txt
+ 
+There is bonus points for good tests documenting your programs correctness.
+ 

@@ -1,0 +1,72 @@
+<style type="text/css">
+    .key{
+        font-weight: bold;
+    }
+    .value{
+        margin-left:12px;
+        color:#0000ff;
+        font-weight:bold;
+    }
+
+    .season{
+        margin-top:10px;
+        margin-bottom:10px;
+        text-decoration: underline;
+        color:#00ffff;
+        font-weight:bold;
+        width:100%;
+    }
+
+    .table_dt{
+        float:left;
+        width:100%;
+        margin-left:25px;
+    }
+
+    .row{
+        width:100%;
+        clear:both;
+    }
+
+    .srow{
+        width:100%;
+        clear:both;
+    }
+</style>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+      $cnt=$("#count").val();
+      $val=0;
+      for ($i=0;$i<$cnt; $i++){
+        $val+=parseInt($("#id"+$i).val());
+      }
+        console.log("val="+$val);
+        $("#gpa").val(($val/2)/$cnt); //I am not sure about gpa
+    });
+</script>
+<div>
+<div><span class="key">Name:</span><span class="value">John Doe</span></div>
+<div><span class="key">Id:</span><span class="value">123-456-789</span></div>
+<div><span class="key">GPA:</span><input id="gpa" class="value" type="text" value="3.63"/></div>
+<div><span class="key">Major:</span><span class="value">Computer Science</span></div>
+<input id="count" type="hidden" value="9"/>
+<div class="srow"><span class="season">Winter 2013</span></div>
+    <div class="row">
+     <div class="table_dt"><span class="key">Math 1C</span><span class="value">B+</span><input id="id0" type="hidden" value="9"/></div>
+     <div class="table_dt"><span class="key">Comp Sci 100</span><span class="value">A</span><input id="id1" type="hidden" value="11"/></div>
+     <div class="table_dt"><span class="key">Comp Sci 111</span><span class="value">A-</span><input id="id2" type="hidden" value="10"/></div>
+    </div>
+<div><span class="season">Fall 2012</span></div>
+    <div class="row">
+     <div class="table_dt"><span class="key">Math 1B</span><span class="value">B</span><input id="id3" type="hidden" value="8"/></div>
+     <div class="table_dt"><span class="key">English 1</span><span class="value">A</span><input id="id4" type="hidden" value="11"/></div>
+     <div class="table_dt"><span class="key">Comp Sci 2</span><span class="value">A-</span><input id="id5" type="hidden" value="10"/></div>
+    </div>
+<div><span class="season">Spring 2012</span></div>
+    <div class="row">
+     <div class="table_dt"><span class="key">Math 1A</span><span class="value">A-</span><input id="id6" type="hidden" value="10"/></div>
+     <div class="table_dt"><span class="key">History 10</span><span class="value">B+</span><input id="id7" type="hidden" value="9"/></div>
+     <div class="table_dt"><span class="key">Comp Sci 1</span><span class="value">A</span><input id="id8" type="hidden" value="11"/></div>
+    </div>
+</div>

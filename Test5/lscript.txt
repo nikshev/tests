@@ -1,0 +1,1 @@
+grep -rni '\<[A-Za-z]\{,5\}\>' | sort -nr

@@ -1,0 +1,187 @@
+<head>
+</head>
+<body>
+ <script src="jquery.js" type="text/javascript"></script>
+ <script type="text/javascript">
+   var StrArr=[];
+   StrArr.push("<table style=\"width: 640px;\">"+
+                 "<thead style=\"background: #fc0\"> "+
+                 " <tr> "+
+                 "   <td>First name</td><td>Last name</td><td>Month</td><td>Day</td><td>Year</td><td>Phone</td><td>Position</td><td>Comment</td><td>Action</td>  "+
+                 " </tr> "+
+                 "</thead><tbody style=\"background: #ccc\">");
+	
+   function Delete(arg){
+	 StrArr[arg]="";
+	 showArr();
+	}
+	
+	function showArr(){
+	  var str="";
+	   for(var i=0; i<StrArr.length; i++) {
+	    str+=StrArr[i];
+	    }
+	  jQuery("#tab").html(str+"</tbody></table>");
+	}
+	
+   jQuery(document).ready(function() {
+   	 showArr();
+    jQuery("#an").click(function() {
+	  $fn = jQuery("#fn").val();
+	  $ln = jQuery("#ln").val();
+	  $mn = jQuery("#month").val();
+	  $day=jQuery("#day").val();
+	  $yr=jQuery("#year").val();
+	  $pn=jQuery("#pn").val();
+	  $sl=jQuery("#sl").val();
+	  $com=jQuery("#com").val();
+	  
+	  var error=0
+	  var str="<tr>";
+	  
+	   if (!(typeof($fn)==='undefined')&&$fn.length>0)
+	    str=str+"<td>"+$fn+"</td>";
+	   else
+	    {
+	     console.log("Enter First name");
+	 	 error++;
+	    }
+	 
+	   if (!(typeof($ln)==='undefined')&&$ln.length>0)
+	    str=str+"<td>"+$ln+"</td>";
+	   else
+	    {
+		 if (error===0)
+          console.log("Enter last name");
+	     error++;
+	    }
+	   
+	  
+	   if (!(typeof($mn)==='undefined')&&$mn.length>0)
+	    str=str+"<td>"+$mn+"</td>";
+	   else
+	    {
+		 if (error===0)
+          console.log("Enter month");
+	     error++;
+	     
+	    }
+ 	   
+      if (!(typeof($day)==='undefined')&&$day.length>0)
+	    str=str+"<td>"+$day+"</td>";
+	  else
+	   {
+	    if (error===0)
+         console.log("Enter day");
+	    error++;
+	   }
+	  
+	  if (!(typeof($yr)==='undefined')&&$yr.length>0)
+	    str=str+"<td>"+$yr+"</td>";
+      else
+	    {
+		 if (error===0)
+          console.log("Enter year");  
+	     error++;
+	   }
+	   
+	  if (!(typeof($pn)==='undefined')&&$pn.length>0)
+	    str=str+"<td>"+$pn+"</td>";
+      else
+	    {
+		 if (error===0)
+          console.log("Enter phone");  
+	     error++;
+	   }
+	   
+	   if (!(typeof($sl)==='undefined')&&$sl.length>0)
+	    str=str+"<td>"+$sl+"</td>";
+      else
+	    {
+		 if (error===0)
+          console.log("Enter position");  
+	     error++;
+	    }
+	   
+	   if (!(typeof($com)==='undefined')&&$com.length>0)
+	   str=str+"<td>"+$com+"</td>";
+      else
+	    {
+		if (error===0)
+          console.log("Enter comment");  
+	     error++;
+	    }
+	   
+	   if (error==0)
+	    {
+		 var aln=StrArr.length;
+		 if (!(typeof(aln)==='undefined'))
+		  str=str+"<td>"+"<a href=\"javascript:Delete("+aln+")\">remove</a></td></tr>";
+		 else
+		  str=str+"<td>"+"<a href=\"javascript:Delete(0)\">remove</a></td></tr>";
+		 StrArr.push(str);
+		 showArr();
+		}
+	});
+	
+	 jQuery("#clr").click(function() {
+	   jQuery("#fn").val('');
+	   jQuery("#ln").val('');
+	   jQuery("#month").val('');
+	   jQuery("#day").val('');
+	   jQuery("#year").val('');
+	   jQuery("#pn").val('');
+	   jQuery('#sl')[0].selectedIndex = 0;
+	   jQuery("#com").val('');
+	 });
+	 
+	 jQuery("#clr_tab").click(function() {
+	   for(var i=1; i<StrArr.length; i++) 
+	    StrArr[i]="";
+	   showArr();
+	 });
+	
+ });
+ 
+ </script>
+ <div>
+ <div style="float:left; width:640px; border: 1px solid black;">
+  <div style="float:left; width:250px;">
+   <label for="fn">First name</label> 
+   <input type="text" id="fn" value="First name"/><br/>
+   <label for="ln">Last name</label> 
+   <input type="text" id="ln" value="Last name"/><br/>
+   <label for="month">Birthday</label> 
+   <input type="text" name="month" id="month"  maxlength="2" size="2"> /
+   <input type="text" name="day" id="day" maxlength="2" size="2"> /
+   <input type="text" name="year" id="year" maxlength="4" size="4">
+   <label for="pn">Phone</label> 
+   <input type="text" id="pn" /><br/>
+   <label for="sl">Select</label> 
+   <select id="sl"/>
+    <option disabled>Choose position</option>
+	<option val="Web developer">Web developer</option>
+	<option val="Developer">Developer</option>
+	<option val="CTO">CTO</option>
+	<option val="Head CHeaf">Head CHeaf</option>
+   <select/>
+   <br/>
+  </div>
+  <div style="float:left">
+   <textarea rows="10" cols="45" name="com" id="com"></textarea>
+  </div>
+  <div style="float:left; width:640px;">
+   <div style="float:right; width:140px;">
+    <input type="button" value="Add new" id="an"/>
+    <input type="button" value="Clear" id="clr"/>
+   </div>
+  </div>
+  <div id="tab" style="float:left; width:640px;">
+  </div>
+   <div id="low_but" style="float:left; width:640px;">
+    <div style="float:right; width:140px;">
+     <input type="button" value="Remove all" id="clr_tab"/>
+	</div>
+ </div>
+ </div>
+</body>

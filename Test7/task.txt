@@ -1,0 +1,10 @@
+User control system.
+Not use frameworks.
+Features list:
+1) Add new user (email, full name (first name, last name), age)
+2) User search by email
+3) User search by first name
+4) User search by age
+5) User delete
+6) Export to excel
+
