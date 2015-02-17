@@ -7,6 +7,7 @@ require_once("base.php");
 class User {
 
     var $base;
+    var $salt="allok2345";
    /**
    * Constructor for User
    */
@@ -16,29 +17,89 @@ class User {
 
    /**
     * Check user authorization
+    * @return bool
     */
 	public function is_authorized(){
-    
+     if (!isset($_SESSION))
+         session_start();
+     if (isset($_SESSION["userid"]))
+         return true;
+     else
+         return false;
 	}
+
+
+    /**
+     * check login in
+     * @param string $email
+     * @param string $pwd
+     */
+    public function check_login($email="", $pwd="")
+    {
+        if (!isset($_SESSION))
+            session_start();
+        $this->base=new Base();
+        $userid=$this->base->check_login($email,md5($pwd.$this->salt));
+        if ($userid>-1){
+            $_SESSION["userid"]=$userid;
+        }
+    }
+
+    /**
+     * Switch language
+     */
+    public function switch_lang(){
+        if (!isset($_SESSION))
+            session_start();
+        if (isset($_SESSION["lang"])&&$_SESSION["lang"]==='ru')
+            $_SESSION["lang"]='en';
+        else
+            $_SESSION["lang"]='ru';
+    }
+
+    /**
+     * Get language constants from  config.php
+     * @param $constant
+     * @return mixed
+     */
+    public function get_lang_constant($constant){
+     require_once('config.php');
+     global $ru_lang;
+     global $eng_lang;
+     $tmp_array=$eng_lang;
+     if (!isset($_SESSION))
+         session_start();
+     if (isset($_SESSION["lang"])&&$_SESSION["lang"]==='ru')
+         $tmp_array=$ru_lang;
+
+     $ret_val=$constant;
+     foreach($tmp_array as $key=>$value)
+     {
+         if ($key===$constant)
+             $ret_val=$value;
+     }
+     return $ret_val;
+    }
 
 	/**
     * Show login form
     */
 	private function login_form(){
     ?>
-    <form class="form-horizontal" enctype="multipart/form-data" action="login.php" method="POST">
+    <form class="form-horizontal" enctype="multipart/form-data" action="/forge/login.php" method="POST">
      <fieldset>
-      <legend>login form</legend>
-      
+      <legend><?php echo $this->get_lang_constant("login_form_legend");?></legend>
+       <a href="/forge/register.php"><?php echo $this->get_lang_constant("sign_in")?></a>
+
        <div class="control-group">
-        <label class="control-label" for="login">Email</label>
+        <label class="control-label" for="login"><?php echo $this->get_lang_constant("email");?></label>
         <div class="controls">
-         <input type="text" id="login" name="login" placeholder="Please enter your login..." /><br/>
+         <input type="text" id="login" name="login" placeholder="<?php echo $this->get_lang_constant("email_placeholder");?>"/><br/>
         </div>
        </div>
 
        <div class="control-group">
-        <label class="control-label" for="pwd">Password</label>
+        <label class="control-label" for="pwd"><?php echo $this->get_lang_constant("pwd");?></label>
         <div class="controls">
           <input type="password" id="pwd" name="pwd" value=""/><br/>
          </div>
@@ -46,7 +107,7 @@ class User {
 
        <div class="control-group">
         <div class="controls">
-         <button type="submit" class="btn">login</button>
+         <button type="submit" class="btn"><?php echo $this->get_lang_constant('login_btn');?></button>
         </div>
        </div>
 
@@ -62,7 +123,7 @@ class User {
     */
 	public function signin_form(){
     ?>
-     <legend>Sign In form</legend>
+     <legend><?php echo $this->get_lang_constant('si_form_legend');?></legend>
      <table id="myTable" class="table table-bordered" width="10%">
      <tbody>
       <tr>	
@@ -72,52 +133,52 @@ class User {
       
       
            <div class="control-group">
-             <label class="control-label" for="first">First name</label>
+             <label class="control-label" for="first"><?php echo $this->get_lang_constant('first');?></label>
              <div class="controls">
-              <input type="text" id="first" name="first" placeholder="Please enter your first name..." /><br/>
+              <input type="text" id="first" name="first" placeholder="<?php echo $this->get_lang_constant('first_p');?>"/><br/>
              </div>
            </div>
 
           <div class="control-group">
-           <label class="control-label" for="last">Last name</label>
+           <label class="control-label" for="last"><?php echo $this->get_lang_constant('last');?></label>
             <div class="controls">
-             <input type="text" id="last" name="last" placeholder="Please enter your last name..." /><br/>
+             <input type="text" id="last" name="last" placeholder="<?php echo $this->get_lang_constant('last_p');?>" /><br/>
             </div>
            </div>
 
           <div class="control-group">
-           <label class="control-label" for="phone">Phone</label>
+           <label class="control-label" for="phone"><?php echo $this->get_lang_constant('phone');?></label>
            <div class="controls">
-            <input type="text" id="phone" name="phone" placeholder="Please enter your phone number..." /><br/>
+            <input type="text" id="phone" name="phone" placeholder="<?php echo $this->get_lang_constant('phone_p');?>" /><br/>
            </div>
           </div>
 
           <div class="control-group">
-           <label class="control-label" for="newlogin">Email</label>
+           <label class="control-label" for="newlogin"><?php echo $this->get_lang_constant('email');?></label>
            <div class="controls">
-            <input type="text" id="newlogin" name="newlogin" placeholder="Please enter your login..." /><br/>
+            <input type="text" id="newlogin" name="newlogin" placeholder="<?php echo $this->get_lang_constant('email');?>" /><br/>
            </div>
           </div>
 
          <div class="control-group">
-          <label class="control-label" for="pwd">Password</label>
+          <label class="control-label" for="pwd"><?php echo $this->get_lang_constant('pwd');?></label>
            <div class="controls">
             <input type="password" id="pwd" name="pwd" value=""/><br/>
            </div>
          </div>
 
          <div class="control-group">
-          <label class="control-label" for="av">Avatar</label>
+          <label class="control-label" for="av"><?php echo $this->get_lang_constant('av');?></label>
           <div class="controls">
             <input type="file" id="av" name="av" value=""/><br/>
           </div>
          </div>
 
         <div class="control-group">
-        <label class="control-label" for="birth">Birth date</label>
+        <label class="control-label" for="birth"><?php echo $this->get_lang_constant('birth');?></label>
         <div class="controls">
          <div id="datetimepicker1" class="input-append date">
-          <input data-format="dd.MM.yyyy" type="text" id="birth" name="birth" placeholder="Please enter your birth date..." value=""/>
+          <input data-format="dd.MM.yyyy" type="text" id="birth" name="birth" placeholder="<?php echo $this->get_lang_constant('birth_p');?>" value=""/>
           <span class="add-on">
            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
            </i>
@@ -127,40 +188,40 @@ class User {
        </div>
 
        <div class="control-group">
-        <label class="control-label" for="marital">Marital status</label>
+        <label class="control-label" for="marital"><?php echo $this->get_lang_constant('marital');?></label>
         <div class="controls">
          <select id="marital" name="marital">
-         	<option value="m">Married</option>
-         	<option selected value="u">Unmarried</option>
+         	<option value="m"><?php echo $this->get_lang_constant('m_option');?></option>
+         	<option selected value="u"><?php echo $this->get_lang_constant('m_option');?></option>
          </select>
          	<br/>
         </div>
        </div>
 
         <div class="control-group">
-        <label class="control-label" for="ed">Education</label>
+        <label class="control-label" for="ed"><?php echo $this->get_lang_constant('ed');?></label>
         <div class="controls">
-         <textarea class="form-control" id="ed" name="ed">Please enter your education</textarea><br/>
+         <textarea class="form-control" id="ed" name="ed"><?php echo $this->get_lang_constant('ed_p');?></textarea><br/>
         </div>
        </div>
 
        <div class="control-group">
-        <label class="control-label" for="ex">Experience</label>
+        <label class="control-label" for="ex"><?php echo $this->get_lang_constant('ex');?></label>
         <div class="controls">
-         <textarea class="form-control" id="ex" name="ex">Please enter your experience</textarea><br/>
+         <textarea class="form-control" id="ex" name="ex"><?php echo $this->get_lang_constant('ex_p');?></textarea><br/>
         </div>
        </div>
 
        <div class="control-group">
-        <label class="control-label" for="ad">Additional info</label>
+        <label class="control-label" for="ad"><?php echo $this->get_lang_constant('ad');?></label>
         <div class="controls">
-         <textarea class="form-control" id="ad" name="ad">Please enter your additional info if you have</textarea><br/>
+         <textarea class="form-control" id="ad" name="ad"><?php echo $this->get_lang_constant('ad_p');?></textarea><br/>
         </div>
        </div>
 
          <div class="control-group">
           <div class="controls">
-           <button type="submit" class="btn">Sign in</button>
+           <button type="submit" class="btn"><?php echo $this->get_lang_constant('sign_in');?></button>
           </div>
          </div>
 
@@ -169,10 +230,7 @@ class User {
       </form>
      </td>
      <td>
-     	<div id="ava" style="float: left; width:40%">
-     		<img src="https://odeworld.files.wordpress.com/2008/05/cdn10_mydeco_avatar.gif?w=490" alt="Mydeco blankie">
-     	</div>	
-     	<div  style="float: left; width:50%">
+     	<div>
      		<p style="text-align:justify;"><span id="tooltip" style="color:#FF0000;">Please enter your first name.</span> Lorem ipsum dolor sit amet, ex legere mandamus vis, vim feugiat democritum scriptorem in. An vix suas paulo laoreet, ea vis malorum instructior. Te ius eius instructior, ius id tamquam tractatos. Quo ei dolores euripidis disputando, nam ad vitae dissentias signiferumque. Cetero alienum suscipit sed ad, utinam corpora lucilius quo in. Ei vel propriae sententiae.
              Vero gubergren ex nec. Phaedrum moderatius has ut, unum explicari in cum. Eu quo atqui mundi, tollit graecis phaedrum usu ex, velit vivendo has te. Ius perfecto sapientem posidonium ea.
 
@@ -201,8 +259,14 @@ class User {
     */
 	public function profile_form(){
     ?>
-        <legend>Sign In form</legend>
-        <table id="myTable" class="table table-bordered" width="10%">
+        <br/>
+        <a href="/forge/logout.php"><?php echo $this->get_lang_constant('log_out');?></a>
+        <?php
+         $user_data=$this->get_data();
+         if ($user_data!=null):
+        ?>
+        <legend><?php echo $this->get_lang_constant('profile');?></legend>
+         <table id="myTable" class="table table-bordered" width="10%">
             <tbody>
             <tr>
                 <td width="50%">
@@ -211,95 +275,75 @@ class User {
 
 
                             <div class="control-group">
-                                <label class="control-label" for="first">First name</label>
+                                <label class="control-label" for="first"><?php echo $this->get_lang_constant('first');?></label>
                                 <div class="controls">
-                                    <input type="text" id="first" name="first" placeholder="Please enter your first name..." /><br/>
+                                    <input type="text" id="first" readonly name="first" value="<?php echo $user_data["first"];?>"/><br/>
                                 </div>
                             </div>
 
                             <div class="control-group">
-                                <label class="control-label" for="last">Last name</label>
+                                <label class="control-label" for="last"><?php echo $this->get_lang_constant('last');?></label>
                                 <div class="controls">
-                                    <input type="text" id="last" name="last" placeholder="Please enter your last name..." /><br/>
+                                    <input type="text" id="last" readonly name="last" value="<?php echo $user_data["last"];?>" /><br/>
                                 </div>
                             </div>
 
                             <div class="control-group">
-                                <label class="control-label" for="phone">Phone</label>
+                                <label class="control-label" for="phone"><?php echo $this->get_lang_constant('phone');?></label>
                                 <div class="controls">
-                                    <input type="text" id="phone" name="phone" placeholder="Please enter your phone number..." /><br/>
+                                    <input type="text" id="phone"  readonly name="phone" value="<?php echo $user_data["phone"];?>" /><br/>
                                 </div>
                             </div>
 
                             <div class="control-group">
-                                <label class="control-label" for="newlogin">Email</label>
+                                <label class="control-label" for="newlogin"><?php echo $this->get_lang_constant('email');?></label>
                                 <div class="controls">
-                                    <input type="text" id="newlogin" name="newlogin" placeholder="Please enter your login..." /><br/>
+                                    <input type="text" id="newlogin" readonly name="newlogin" value="<?php echo $user_data["email"];?>" /><br/>
                                 </div>
                             </div>
 
-                            <div class="control-group">
-                                <label class="control-label" for="pwd">Password</label>
-                                <div class="controls">
-                                    <input type="password" id="pwd" name="pwd" value=""/><br/>
-                                </div>
-                            </div>
 
                             <div class="control-group">
-                                <label class="control-label" for="av">Avatar</label>
+                                <label class="control-label" for="birth"><?php echo $this->get_lang_constant('birth');?></label>
                                 <div class="controls">
-                                    <input type="file" id="av" name="av" value=""/><br/>
+                                  <input type="text" id="birth" readonly name="birth"  value="<?php echo $user_data["birth"];?>"/>
                                 </div>
-                            </div>
+                           </div>
 
                             <div class="control-group">
-                                <label class="control-label" for="birth">Birth date</label>
+                                <label class="control-label" for="marital"><?php echo $this->get_lang_constant('marital');?></label>
                                 <div class="controls">
-                                    <div id="datetimepicker1" class="input-append date">
-                                        <input data-format="dd.MM.yyyy" type="text" id="asd" name="asd" placeholder="Please enter your birth date..." value=""/>
-          <span class="add-on">
-           <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-           </i>
-          </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="control-group">
-                                <label class="control-label" for="marital">Marital status</label>
-                                <div class="controls">
-                                    <select id="marital" name="marital">
-                                        <option value="m">Married</option>
-                                        <option selected value="u">Unmarried</option>
+                                    <select id="marital" readonly name="marital">
+                                        <?php if ($user_data["marital"]==='m') :?>
+                                         <option selected value="m"><?php echo $this->get_lang_constant('m_option');?></option>
+                                         <option value="u"><?php echo $this->get_lang_constant('m_option');?></option>
+                                        <?php else : ?>
+                                            <option value="m"><?php echo $this->get_lang_constant('m_option');?></option>
+                                            <option selected value="u"><?php echo $this->get_lang_constant('m_option');?></option>
+                                        <?php endif ?>
                                     </select>
                                     <br/>
                                 </div>
                             </div>
 
                             <div class="control-group">
-                                <label class="control-label" for="ed">Education</label>
+                                <label class="control-label" for="ed"><?php echo $this->get_lang_constant('ed');?></label>
                                 <div class="controls">
-                                    <textarea class="form-control" id="ed" name="ed">Please enter your education</textarea><br/>
+                                    <textarea class="form-control" id="ed" readonly name="ed"><?php echo $user_data["ed"];?></textarea><br/>
                                 </div>
                             </div>
 
                             <div class="control-group">
-                                <label class="control-label" for="ex">Experience</label>
+                                <label class="control-label" for="ex"><?php echo $this->get_lang_constant('ex');?></label>
                                 <div class="controls">
-                                    <textarea class="form-control" id="ex" name="ex">Please enter your experience</textarea><br/>
+                                    <textarea class="form-control" id="ex" readonly name="ex"><?php echo $user_data["ex"];?></textarea><br/>
                                 </div>
                             </div>
 
                             <div class="control-group">
-                                <label class="control-label" for="ad">Additional info</label>
+                                <label class="control-label" for="ad"><?php echo $this->get_lang_constant('ad');?></label>
                                 <div class="controls">
-                                    <textarea class="form-control" id="ad" name="ad">Please enter your additional info if you have</textarea><br/>
-                                </div>
-                            </div>
-
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button type="submit" class="btn">Sign in</button>
+                                    <textarea class="form-control" id="ad" readonly name="ad"><?php echo $user_data["ad"];?></textarea><br/>
                                 </div>
                             </div>
 
@@ -309,10 +353,10 @@ class User {
                 </td>
                 <td>
                     <div id="ava" style="float: left; width:40%">
-                        <img src="https://odeworld.files.wordpress.com/2008/05/cdn10_mydeco_avatar.gif?w=490" alt="Mydeco blankie">
+                        <img src="<?php echo $user_data["av"];?>" alt="Avatar">
                     </div>
                     <div  style="float: left; width:50%">
-                        <p style="text-align:justify;"><span id="tooltip" style="color:#FF0000;">Please enter your first name.</span> Lorem ipsum dolor sit amet, ex legere mandamus vis, vim feugiat democritum scriptorem in. An vix suas paulo laoreet, ea vis malorum instructior. Te ius eius instructior, ius id tamquam tractatos. Quo ei dolores euripidis disputando, nam ad vitae dissentias signiferumque. Cetero alienum suscipit sed ad, utinam corpora lucilius quo in. Ei vel propriae sententiae.
+                        <p style="text-align:justify;"><span id="tooltip" style="color:#FF0000;">Good day <?php echo $user_data["first"];?>.</span> Lorem ipsum dolor sit amet, ex legere mandamus vis, vim feugiat democritum scriptorem in. An vix suas paulo laoreet, ea vis malorum instructior. Te ius eius instructior, ius id tamquam tractatos. Quo ei dolores euripidis disputando, nam ad vitae dissentias signiferumque. Cetero alienum suscipit sed ad, utinam corpora lucilius quo in. Ei vel propriae sententiae.
                             Vero gubergren ex nec. Phaedrum moderatius has ut, unum explicari in cum. Eu quo atqui mundi, tollit graecis phaedrum usu ex, velit vivendo has te. Ius perfecto sapientem posidonium ea.
 
                             Omnis putant ei pro. Commodo recteque eum id, te eius augue elitr nec. His eu erat percipitur. Ad sit causae veritus dignissim. Postulant instructior interpretaris no sit.
@@ -323,19 +367,30 @@ class User {
                     </div>
                 </td>
             </tr>
-    <?php
+            <?php
+            endif;
 	}
 
     /**
     *  Main function 
     */
 	public function login(){
-      $this->signin_form();
-     /*if (!$this->is_authorized)
+     if (!$this->is_authorized())
         $this->login_form();
      else 
-     	$this->profile_form();*/
+     	$this->profile_form();
 	}
+
+    /**
+     * Check Email In Base (double login protection)
+     * @param string $email
+     * @return bool
+     */
+    public function CheckEmailInBase($email="")
+    {
+      $this->base=new Base();
+      return $this->base->check_email($email);
+    }
 
     /**
      *  Function for data validation
@@ -347,7 +402,7 @@ class User {
       $retval=null;
       switch ($key){
           case "login":
-              if (strlen($value)>10&&strpos($value,'@')!== false)
+              if (strlen($value)>10&&strpos($value,'@')!== false && $this->CheckEmailInBase($value))
                   $retval=$value;
               break;
           case "first":
@@ -362,7 +417,7 @@ class User {
               break;
           case "pwd":
               if (strlen($value)>6)
-                  $retval=md5($value);
+                  $retval=md5($value.$this->salt);
               break;
           case "av":
               $retval=$value;
@@ -398,12 +453,24 @@ class User {
 
     /**
      *  Function for get  data from database
-     * @param $userid
      * @return array
      */
-    public function get_data($userid){
-       $this->base=new Base();
-       return $this->base->get_user_data($userid);
+    public function get_data(){
+       if (!isset($_SESSION))
+        session_start();
+
+       if (isset($_SESSION["userid"])) {
+           $this->base = new Base();
+           return $this->base->get_user_data($_SESSION["userid"]);
+       } else
+           return null;
+    }
+
+    public function logout(){
+        if (!isset($_SESSION))
+            session_start();
+        if (isset($_SESSION["userid"]))
+          unset($_SESSION["userid"]);
     }
 
 }

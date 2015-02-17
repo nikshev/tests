@@ -1,6 +1,6 @@
 <?php
 /**
- * Index file
+ * Index page
  */
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
@@ -30,12 +30,15 @@ ini_set('display_errors', true);
    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6  column col-sm-offset-0 col-md-offset-2 col-lg-offset-3">
 <a href="http://api.hostinger.com.ua/redir/5450818" target="_blank"><img src="http://hostinger.com.ua/banners/ru/hostinger-728x90-1.gif" alt="Бесплатный Хостинг" border="0" width="728" height="90" /></a>
  
- <legend>Test task (User login)</legend>
- <a href="http://ua.linkedin.com/pub/eugene-shkurnikov/79/b13/124">About me</a>
+
+ <?
+    require_once("user.php");
+    $user=new User();
+ ?>
+ <legend><?php echo$user->get_lang_constant('test_task');?></legend>
+ <a href="http://ua.linkedin.com/pub/eugene-shkurnikov/79/b13/124"><?php echo$user->get_lang_constant('about');?></a> / <a href="/forge/switch.php"><?php echo$user->get_lang_constant('switch_lang');?></a>
 
 <?php
-  require_once("user.php");
-  $user=new User();
   $user->login();
 ?>
 
