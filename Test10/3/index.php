@@ -2,6 +2,7 @@
 /**
  * Index file
  */
+error_reporting(E_ALL);
 require_once("tree.php");
 $tree=new Tree();
 $tree=$tree->GetTree();
