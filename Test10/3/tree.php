@@ -8,22 +8,58 @@ class Tree {
     /**
      * Add node to database
      */
-    public function AddNode(){
+    public function AddNode($parent_id,$name){
+        $result=-1;
+        try {
+            $db = new SQLite3('mysqlitedb.db', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+            if (isset($name)&&isset($parent_id)){
+                $db->exec("INSERT INTO tree (PARENT_ID, NAME) VALUES ($parent_id,'$name')");
+                $result=$db->lastInsertRowID();
+            }
+            $db->close();
+        }  catch (Exception $ex) {
+            echo "Exception in Tree->AddNode: " . $ex->getMessage() . "<br/>";
+            $db->close();
+        }
 
+        return $result;
     }
 
     /**
      * Update node in database
      */
-    public function EditNode(){
-
+    public function EditNode($id,$parent_id,$name){
+        $result=-1;
+        try {
+            $db = new SQLite3('mysqlitedb.db', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+            if (isset($name)&&isset($parent_id)&&isset($id)){
+                $result=$db->exec("UPDATE tree SET PARENT_ID=$parent_id, NAME='$name' WHERE ID=$id");
+            }
+            $db->close();
+        }  catch (Exception $ex) {
+            echo "Exception in Tree->EditNode: " . $ex->getMessage() . "<br/>";
+            $db->close();
+        }
+        return $result;
     }
 
     /**
      * Delete node from database
      */
-    public function DeleteNode(){
-
+    public function DeleteNode($id){
+        $result=-1;
+        try {
+            $db = new SQLite3('mysqlitedb.db', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+            if (isset($id)){
+                $result=$db->exec("UPDATE tree SET DELETE_AT=CURRENT_TIMESTAMP WHERE ID=$id");
+                $result+=$db->exec("UPDATE tree SET DELETE_AT=CURRENT_TIMESTAMP WHERE PARENT_ID=$id");
+            }
+            $db->close();
+        }  catch (Exception $ex) {
+            echo "Exception in Tree->DeleteNode: " . $ex->getMessage() . "<br/>";
+            $db->close();
+        }
+        return $result;
     }
 
     /**
@@ -41,11 +77,11 @@ class Tree {
                 foreach ($nodes as $node) {
                     $tree .= "<li>";
                     if (is_null($parent_id))
-                        $tree .= '<a data-id="' . $node["ID"] . '">';
+                        $tree .= '<a class="link" data-id="' . $node["ID"] . '">';
                     else
-                        $tree .= '<a data-id="' . $node["ID"] . '" data-parentid="' . $parent_id . '">';
+                        $tree .= '<a class="link" data-id="' . $node["ID"] . '" data-parentid="' . $parent_id . '">';
                     $tree .= $node["NAME"];
-                    $tree .= "</a>";
+                    $tree .= '</a><span class="delete" style="color:blue">&nbspDelete</span><span class="input-span"><input type="text" /><a class="save" style="color:blue">&nbsp;Save</a></span>';
                     $tree .=$this->GetTree($node["NODES"],$node["ID"]);
                     $tree .= "</li>";
                 }
@@ -86,8 +122,10 @@ class Tree {
                     $tree[] = array("ID" => $row["ID"], "NAME" => $row["NAME"], "NODES" => $nodes);
                 }
             }
+            $db->close();
         }  catch (Exception $ex) {
             echo "Exception in Tree->GetAllNodes: " . $ex->getMessage() . "<br/>";
+            $db->close();
         }
         return $tree;
     }

@@ -17,7 +17,7 @@ try {
             UPDATE_AT TIMESTAMP,
             DELETE_AT TIMESTAMP
            )');
-    $db->exec("INSERT INTO tree (PARENT_ID, NAME) VALUES (0,'Root')"); //Add to database first row*/
+    $db->exec("INSERT INTO tree (PARENT_ID, NAME) VALUES (0,'Root')"); //Add to database first row
     $db->exec("INSERT INTO tree (PARENT_ID, NAME) VALUES (1,'Level 1 Item 1')"); //Add to database row
     $db->exec("INSERT INTO tree (PARENT_ID, NAME) VALUES (1,'Level 1 Item 2')"); //Add to database row
     $db->exec("INSERT INTO tree (PARENT_ID, NAME) VALUES (1,'Level 1 Item 3')"); //Add to database row
