@@ -53,16 +53,16 @@ class RateLimiter
             $this->memcache->set($key, 1, 0, 2); //Set key for two seconds
         }
 
-        if ($requests > $this->limit) {
-            throw new RateExceededException;
-        }
-        else {
+        if ($requests < $this->limit) {
             //call user function
             if (isset($this->user_func)&&is_callable($this->user_func)) {
                 call_user_func($this->user_func);
             }
             else
                 throw new NotSetCallableFunctionException;
+        }
+        else {
+            throw new RateExceededException;
         }
     }
 
