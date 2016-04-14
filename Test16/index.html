@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script src="main.js"></script>
+<input type="file" id="datainput" />
+<br/>
+<input type="file" id="deltainput" />
+<br/>
+<button id="start-button">Start process</button>
+<button id="stop-button">Stop process</button>
+</body>
+</html>
+<script>
+    document.getElementById('datainput').addEventListener('change', getDataFromCsv, false); //Add event listener to data file input
+    document.getElementById('deltainput').addEventListener('change', getDeltaDataFromCsv, false); //Add event listener to delta file input
+    document.getElementById('start-button').addEventListener('click', startProcess, false); //Add event listener to start process button
+    document.getElementById('stop-button').addEventListener('click', stopProcess, false); //Add event listener to stop process button
+</script>
